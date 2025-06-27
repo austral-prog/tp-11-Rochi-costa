@@ -5,7 +5,6 @@ def read_file_to_dict(filename):
     :return: dict - diccionario con listas de montos por producto.
     :raises: FileNotFoundError - si el archivo no existe.
     """
-    ventas = {}
     try:
         with open(nombre_archivo, "r") as archivo:
             contenido = archivo.read().strip()
@@ -21,14 +20,13 @@ def read_file_to_dict(filename):
                             ventas[producto] = []
                         ventas[producto].append(valor)
                     except ValueError:
-                        print(f"Error en el par: '{par}', se ignora.")
+                        print(f"Error de formato en el par: '{par}', se ignora.")
     except FileNotFoundError:
-        print(f"'{nombre_archivo}' no fue encontrado.")
-        raise  # Importante capturarlo
+        print(f"El archivo '{nombre_archivo}' no fue encontrado.")
+        raise  # Importante para que los tests puedan capturarlo
     except Exception as e:
         print(f"Ocurrió un error inesperado al leer el archivo: {e}")
         return None
-
 
     return ventas
     
@@ -40,13 +38,14 @@ def process_dict(data):
     :param data: dict - diccionario a procesar.
     :return: None
     """
+    def process_dict(ventas):
     for producto, montos in ventas.items():
         total = sum(montos)
         promedio = total / len(montos)
         print(f"{producto}: ventas totales ${total:.2f}, promedio ${promedio:.2f}")
 
 
-# Ejemplo si se ejecuta como principal
+# Ejemplo de uso si se ejecuta como programa principal
 if __name__ == "__main__":
     archivo = "datos.txt"
     try:
@@ -54,4 +53,4 @@ if __name__ == "__main__":
         if ventas:
             process_dict(ventas)
     except FileNotFoundError:
-        pass  #imprimió el mensaje en la función
+        pass  # Ya se imprimió el mensaje dentro de la función
